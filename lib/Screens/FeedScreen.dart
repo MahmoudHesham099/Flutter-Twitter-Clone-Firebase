@@ -9,7 +9,13 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.red,
+      backgroundColor: Colors.blue,
+      body: Center(
+        child: Text(
+          'Feed Screen',
+          style: TextStyle(fontSize: 30),
+        ),
+      ),
     );
   }
 }
