@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "483619163251",
+    "project_id": "flutter-twitter-c09d3",
+    "storage_bucket": "flutter-twitter-c09d3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:483619163251:android:dc31102cef93b45971ee06",
+        "android_client_info": {
+          "package_name": "com.hesham.twitter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "483619163251-uaqapq0v26morr6ft09m9m0mgnl4lsft.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyConA8KzG0agSZMOdzgG5e7eG90aV0bZBs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "483619163251-uaqapq0v26morr6ft09m9m0mgnl4lsft.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

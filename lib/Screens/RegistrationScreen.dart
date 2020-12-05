@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:twitter/Services/auth_service.dart';
 import 'package:twitter/Widgets/RoundedButton.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -68,6 +69,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             ),
             RoundedButton(
               btnText: 'Create account',
+              onBtnPressed: () async {
+                bool isValid =
+                    await AuthService.signUp(_name, _email, _password);
+                if (isValid) {
+                  Navigator.pop(context);
+                } else {
+                  print('something wrong');
+                }
+              },
             ),
           ],
         ),

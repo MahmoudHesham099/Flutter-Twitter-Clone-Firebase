@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:twitter/Services/auth_service.dart';
 import 'package:twitter/Widgets/RoundedButton.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -56,6 +57,14 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             RoundedButton(
               btnText: 'LOG IN',
+              onBtnPressed: () async {
+                bool isValid = await AuthService.login(_email, _password);
+                if (isValid) {
+                  Navigator.pop(context);
+                } else {
+                  print('login problem');
+                }
+              },
             ),
           ],
         ),
