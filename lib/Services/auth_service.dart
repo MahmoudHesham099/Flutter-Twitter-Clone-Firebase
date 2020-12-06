@@ -13,10 +13,13 @@ class AuthService {
       User signedInUser = authResult.user;
 
       if (signedInUser != null) {
-        _fireStore
-            .collection('users')
-            .doc(signedInUser.uid)
-            .set({'name': name, 'email': email, 'profilePicture': ''});
+        _fireStore.collection('users').doc(signedInUser.uid).set({
+          'name': name,
+          'email': email,
+          'profilePicture': '',
+          'coverImage': '',
+          'bio': ''
+        });
         return true;
       }
 
