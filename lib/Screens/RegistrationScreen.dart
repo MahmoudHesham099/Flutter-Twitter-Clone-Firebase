@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:twitter/Constants/Constants.dart';
 import 'package:twitter/Services/auth_service.dart';
 import 'package:twitter/Widgets/RoundedButton.dart';
 
@@ -15,7 +16,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff00acee),
+        backgroundColor: KTweeterColor,
         centerTitle: true,
         elevation: 0,
         title: Text(

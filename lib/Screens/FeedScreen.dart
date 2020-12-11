@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:twitter/Constants/Constants.dart';
 import 'package:twitter/Screens/CreateTweetScreen.dart';
 import 'package:twitter/Screens/HomeScreen.dart';
 import 'package:twitter/Screens/NotificationsScreen.dart';
@@ -7,37 +8,34 @@ import 'package:twitter/Screens/ProfileScreen.dart';
 import 'package:twitter/Screens/SearchScreen.dart';
 
 class FeedScreen extends StatefulWidget {
+  final String currentUserId;
+
+  const FeedScreen({Key key, this.currentUserId}) : super(key: key);
   @override
   _FeedScreenState createState() => _FeedScreenState();
 }
 
 class _FeedScreenState extends State<FeedScreen> {
   int _selectedTab = 0;
-  List<Widget> _feedScreens = [
-    HomeScreen(),
-    SearchScreen(),
-    NotificationsScreen(),
-    ProfileScreen(),
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _feedScreens.elementAt(_selectedTab),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        child: Image.asset('assets/tweet.png'),
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => CreateTweetScreen()));
-        },
-      ),
+      body: [
+        HomeScreen(),
+        SearchScreen(),
+        NotificationsScreen(),
+        ProfileScreen(
+          currentUserId: widget.currentUserId,
+          visitedUserId: widget.currentUserId,
+        ),
+      ].elementAt(_selectedTab),
       bottomNavigationBar: CupertinoTabBar(
         onTap: (index) {
           setState(() {
             _selectedTab = index;
           });
         },
-        activeColor: Color(0xff00acee),
+        activeColor: KTweeterColor,
         currentIndex: _selectedTab,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home)),
