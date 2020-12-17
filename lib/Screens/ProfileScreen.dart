@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:twitter/Constants/Constants.dart';
 import 'package:twitter/Models/UserModel.dart';
+import 'package:twitter/Screens/EditProfileScreen.dart';
 import 'package:twitter/Services/DatabaseServices.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -174,22 +175,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ? AssetImage('assets/placeholder.png')
                                 : NetworkImage(userModel.profilePicture),
                           ),
-                          Container(
-                            width: 100,
-                            height: 35,
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white,
-                              border: Border.all(color: KTweeterColor),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Edit',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: KTweeterColor,
-                                  fontWeight: FontWeight.bold,
+                          GestureDetector(
+                            onTap: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditProfileScreen(
+                                    user: userModel,
+                                  ),
+                                ),
+                              );
+                              setState(() {});
+                            },
+                            child: Container(
+                              width: 100,
+                              height: 35,
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white,
+                                border: Border.all(color: KTweeterColor),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Edit',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    color: KTweeterColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
