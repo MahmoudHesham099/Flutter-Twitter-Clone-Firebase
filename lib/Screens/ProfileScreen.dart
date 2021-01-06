@@ -18,7 +18,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   int _followersCount = 0;
   int _followingCount = 0;
-
+  bool _isFollowing = false;
   int _profileSegmentedValue = 0;
   Map<int, Widget> _profileTabs = <int, Widget>{
     0: Padding(
@@ -94,11 +94,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  followOrUnFollow() {
+    if (_isFollowing) {
+      unFollowUser();
+    } else {
+      followUser();
+    }
+  }
+
+  unFollowUser() {
+    DatabaseServices.unFollowUser(widget.currentUserId, widget.visitedUserId);
+    setState(() {
+      _isFollowing = false;
+      _followersCount--;
+    });
+  }
+
+  followUser() {
+    DatabaseServices.followUser(widget.currentUserId, widget.visitedUserId);
+    setState(() {
+      _isFollowing = true;
+      _followersCount++;
+    });
+  }
+
+  setupIsFollowing() async {
+    bool isFollowingThisUser = await DatabaseServices.isFollowingUser(
+        widget.currentUserId, widget.visitedUserId);
+    setState(() {
+      _isFollowing = isFollowingThisUser;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     getFollowersCount();
     getFollowingCount();
+    setupIsFollowing();
   }
 
   @override
@@ -139,22 +172,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox.shrink(),
-                        PopupMenuButton(
-                          icon: Icon(
-                            Icons.more_horiz,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                          itemBuilder: (_) {
-                            return <PopupMenuItem<String>>[
-                              new PopupMenuItem(
-                                child: Text('Logout'),
-                                value: 'logout',
+                        widget.currentUserId == widget.visitedUserId
+                            ? PopupMenuButton(
+                                icon: Icon(
+                                  Icons.more_horiz,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                                itemBuilder: (_) {
+                                  return <PopupMenuItem<String>>[
+                                    new PopupMenuItem(
+                                      child: Text('Logout'),
+                                      value: 'logout',
+                                    )
+                                  ];
+                                },
+                                onSelected: (selectedItem) {},
                               )
-                            ];
-                          },
-                          onSelected: (selectedItem) {},
-                        ),
+                            : SizedBox(),
                       ],
                     ),
                   ),
@@ -175,39 +210,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ? AssetImage('assets/placeholder.png')
                                 : NetworkImage(userModel.profilePicture),
                           ),
-                          GestureDetector(
-                            onTap: () async {
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EditProfileScreen(
-                                    user: userModel,
+                          widget.currentUserId == widget.visitedUserId
+                              ? GestureDetector(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => EditProfileScreen(
+                                          user: userModel,
+                                        ),
+                                      ),
+                                    );
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    width: 100,
+                                    height: 35,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Colors.white,
+                                      border: Border.all(color: KTweeterColor),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'Edit',
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          color: KTweeterColor,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : GestureDetector(
+                                  onTap: followOrUnFollow,
+                                  child: Container(
+                                    width: 100,
+                                    height: 35,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: _isFollowing
+                                          ? Colors.white
+                                          : KTweeterColor,
+                                      border: Border.all(color: KTweeterColor),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        _isFollowing ? 'Following' : 'Follow',
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          color: _isFollowing
+                                              ? KTweeterColor
+                                              : Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              );
-                              setState(() {});
-                            },
-                            child: Container(
-                              width: 100,
-                              height: 35,
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white,
-                                border: Border.all(color: KTweeterColor),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Edit',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: KTweeterColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
                         ],
                       ),
                       SizedBox(height: 10),

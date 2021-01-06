@@ -22,7 +22,9 @@ class _FeedScreenState extends State<FeedScreen> {
     return Scaffold(
       body: [
         HomeScreen(),
-        SearchScreen(),
+        SearchScreen(
+          currentUserId: widget.currentUserId,
+        ),
         NotificationsScreen(),
         ProfileScreen(
           currentUserId: widget.currentUserId,
