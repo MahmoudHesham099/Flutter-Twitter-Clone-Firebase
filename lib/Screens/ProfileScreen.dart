@@ -76,7 +76,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             });
         break;
       case 1:
-        return Center(child: Text('Media', style: TextStyle(fontSize: 25)));
+        return ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: _mediaTweets.length,
+            itemBuilder: (context, index) {
+              return TweetContainer(
+                author: author,
+                tweet: _mediaTweets[index],
+              );
+            });
         break;
       case 2:
         return Center(child: Text('Likes', style: TextStyle(fontSize: 25)));
