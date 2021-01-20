@@ -13,3 +13,5 @@ final followersRef = _fireStore.collection('followers');
 final followingRef = _fireStore.collection('following');
 
 final storageRef = FirebaseStorage.instance.ref();
+
+final tweetsRef=_fireStore.collection('tweets');

@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:twitter/Constants/Constants.dart';
+import 'package:twitter/Models/Tweet.dart';
 import 'package:twitter/Models/UserModel.dart';
 import 'package:twitter/Screens/EditProfileScreen.dart';
 import 'package:twitter/Services/DatabaseServices.dart';
+import 'package:twitter/Widgets/TweetContainer.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String currentUserId;
@@ -20,6 +22,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int _followingCount = 0;
   bool _isFollowing = false;
   int _profileSegmentedValue = 0;
+  List<Tweet> _allTweets = [];
+  List<Tweet> _mediaTweets = [];
+
   Map<int, Widget> _profileTabs = <int, Widget>{
     0: Padding(
       padding: EdgeInsets.symmetric(vertical: 10),
@@ -56,10 +61,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ),
   };
 
-  Widget buildProfileWidgets() {
+  Widget buildProfileWidgets(UserModel author) {
     switch (_profileSegmentedValue) {
       case 0:
-        return Center(child: Text('Tweets', style: TextStyle(fontSize: 25)));
+        return ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: _allTweets.length,
+            itemBuilder: (context, index) {
+              return TweetContainer(
+                author: author,
+                tweet: _allTweets[index],
+              );
+            });
         break;
       case 1:
         return Center(child: Text('Media', style: TextStyle(fontSize: 25)));
@@ -126,12 +140,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  getAllTweets() async {
+    List<Tweet> userTweets =
+        await DatabaseServices.getUserTweets(widget.visitedUserId);
+    if (mounted) {
+      setState(() {
+        _allTweets = userTweets;
+        _mediaTweets =
+            _allTweets.where((element) => element.image.isNotEmpty).toList();
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     getFollowersCount();
     getFollowingCount();
     setupIsFollowing();
+    getAllTweets();
   }
 
   @override
@@ -330,7 +357,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-                buildProfileWidgets(),
+                buildProfileWidgets(userModel),
               ],
             );
           },

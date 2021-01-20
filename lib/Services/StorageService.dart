@@ -19,7 +19,7 @@ class StorageService {
         .child('images/users/userProfile_$uniquePhotoId.jpg')
         .putFile(image);
     TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
-    String downloadUrl= await taskSnapshot.ref.getDownloadURL();
+    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
     return downloadUrl;
   }
 
@@ -35,7 +35,19 @@ class StorageService {
         .child('images/users/userCover_$uniquePhotoId.jpg')
         .putFile(image);
     TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
-    String downloadUrl= await taskSnapshot.ref.getDownloadURL();
+    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+    return downloadUrl;
+  }
+
+  static Future<String> uploadTweetPicture(File imageFile) async {
+    String uniquePhotoId = Uuid().v4();
+    File image = await compressImage(uniquePhotoId, imageFile);
+
+    UploadTask uploadTask = storageRef
+        .child('images/tweets/tweet_$uniquePhotoId.jpg')
+        .putFile(image);
+    TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
+    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
     return downloadUrl;
   }
 
