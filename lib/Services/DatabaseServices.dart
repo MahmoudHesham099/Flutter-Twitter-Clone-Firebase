@@ -90,6 +90,20 @@ class DatabaseServices {
       "timestamp": tweet.timestamp,
       'likes': tweet.likes,
       'retweets': tweet.retweets,
+    }).then((doc) async {
+      QuerySnapshot followerSnapshot =
+          await followersRef.doc(tweet.authorId).collection('Followers').get();
+
+      for (var docSnapshot in followerSnapshot.docs) {
+        feedRefs.doc(docSnapshot.id).collection('userFeed').doc(doc.id).set({
+          'text': tweet.text,
+          'image': tweet.image,
+          "authorId": tweet.authorId,
+          "timestamp": tweet.timestamp,
+          'likes': tweet.likes,
+          'retweets': tweet.retweets,
+        });
+      }
     });
   }
 
@@ -103,5 +117,17 @@ class DatabaseServices {
         userTweetsSnap.docs.map((doc) => Tweet.fromDoc(doc)).toList();
 
     return userTweets;
+  }
+
+  static Future<List> getHomeTweets(String currentUserId) async {
+    QuerySnapshot homeTweets = await feedRefs
+        .doc(currentUserId)
+        .collection('userFeed')
+        .orderBy('timestamp', descending: true)
+        .get();
+
+    List<Tweet> followingTweets =
+        homeTweets.docs.map((doc) => Tweet.fromDoc(doc)).toList();
+    return followingTweets;
   }
 }

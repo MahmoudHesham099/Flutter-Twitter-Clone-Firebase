@@ -6,8 +6,10 @@ import 'package:twitter/Models/UserModel.dart';
 class TweetContainer extends StatefulWidget {
   final Tweet tweet;
   final UserModel author;
+  final String currentUserId;
 
-  const TweetContainer({Key key, this.tweet, this.author}) : super(key: key);
+  const TweetContainer({Key key, this.tweet, this.author, this.currentUserId})
+      : super(key: key);
   @override
   _TweetContainerState createState() => _TweetContainerState();
 }
@@ -68,31 +70,14 @@ class _TweetContainerState extends State<TweetContainer> {
             children: [
               Row(
                 children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.favorite_border,
-                        ),
-                        onPressed: () {},
-                      ),
-                      Text(
-                        widget.tweet.likes.toString() + ' Likes',
-                      )
-                    ],
+                  IconButton(
+                    icon: Icon(
+                      Icons.favorite_border,
+                    ),
+                    onPressed: () {},
                   ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.repeat,
-                        ),
-                        onPressed: () {},
-                      ),
-                      Text(
-                        widget.tweet.retweets.toString() + ' Retweets',
-                      )
-                    ],
+                  Text(
+                    widget.tweet.likes.toString() + ' Likes',
                   ),
                 ],
               ),
