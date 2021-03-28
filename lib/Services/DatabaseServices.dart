@@ -130,4 +130,59 @@ class DatabaseServices {
         homeTweets.docs.map((doc) => Tweet.fromDoc(doc)).toList();
     return followingTweets;
   }
+
+  static void likeTweet(String currentUserId, Tweet tweet) {
+    DocumentReference tweetDocProfile =
+        tweetsRef.doc(tweet.authorId).collection('userTweets').doc(tweet.id);
+    tweetDocProfile.get().then((doc) {
+      int likes = doc.data()['likes'];
+      tweetDocProfile.update({'likes': likes + 1});
+    });
+
+    DocumentReference tweetDocFeed =
+        feedRefs.doc(currentUserId).collection('userFeed').doc(tweet.id);
+    tweetDocFeed.get().then((doc) {
+      if (doc.exists) {
+        int likes = doc.data()['likes'];
+        tweetDocFeed.update({'likes': likes + 1});
+      }
+    });
+
+    likesRef.doc(tweet.id).collection('tweetLikes').doc(currentUserId).set({});
+  }
+
+  static void unlikeTweet(String currentUserId, Tweet tweet) {
+    DocumentReference tweetDocProfile =
+        tweetsRef.doc(tweet.authorId).collection('userTweets').doc(tweet.id);
+    tweetDocProfile.get().then((doc) {
+      int likes = doc.data()['likes'];
+      tweetDocProfile.update({'likes': likes - 1});
+    });
+
+    DocumentReference tweetDocFeed =
+        feedRefs.doc(currentUserId).collection('userFeed').doc(tweet.id);
+    tweetDocFeed.get().then((doc) {
+      if (doc.exists) {
+        int likes = doc.data()['likes'];
+        tweetDocFeed.update({'likes': likes - 1});
+      }
+    });
+
+    likesRef
+        .doc(tweet.id)
+        .collection('tweetLikes')
+        .doc(currentUserId)
+        .get()
+        .then((doc) => doc.reference.delete());
+  }
+
+  static Future<bool> isLikeTweet(String currentUserId, Tweet tweet) async {
+    DocumentSnapshot userDoc = await likesRef
+        .doc(tweet.id)
+        .collection('tweetLikes')
+        .doc(currentUserId)
+        .get();
+
+    return userDoc.exists;
+  }
 }

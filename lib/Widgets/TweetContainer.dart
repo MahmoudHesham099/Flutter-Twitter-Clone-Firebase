@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:twitter/Constants/Constants.dart';
 import 'package:twitter/Models/Tweet.dart';
 import 'package:twitter/Models/UserModel.dart';
+import 'package:twitter/Services/DatabaseServices.dart';
 
 class TweetContainer extends StatefulWidget {
   final Tweet tweet;
@@ -15,6 +16,42 @@ class TweetContainer extends StatefulWidget {
 }
 
 class _TweetContainerState extends State<TweetContainer> {
+  int _likesCount = 0;
+  bool _isLiked = false;
+
+  initTweetLikes() async {
+    bool isLiked =
+        await DatabaseServices.isLikeTweet(widget.currentUserId, widget.tweet);
+    if (mounted) {
+      setState(() {
+        _isLiked = isLiked;
+      });
+    }
+  }
+
+  likeTweet() {
+    if (_isLiked) {
+      DatabaseServices.unlikeTweet(widget.currentUserId, widget.tweet);
+      setState(() {
+        _isLiked = false;
+        _likesCount--;
+      });
+    } else {
+      DatabaseServices.likeTweet(widget.currentUserId, widget.tweet);
+      setState(() {
+        _isLiked = true;
+        _likesCount++;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _likesCount = widget.tweet.likes;
+    initTweetLikes();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -72,12 +109,13 @@ class _TweetContainerState extends State<TweetContainer> {
                 children: [
                   IconButton(
                     icon: Icon(
-                      Icons.favorite_border,
+                      _isLiked ? Icons.favorite : Icons.favorite_border,
+                      color: _isLiked ? Colors.blue : Colors.black,
                     ),
-                    onPressed: () {},
+                    onPressed: likeTweet,
                   ),
                   Text(
-                    widget.tweet.likes.toString() + ' Likes',
+                    _likesCount.toString() + ' Likes',
                   ),
                 ],
               ),

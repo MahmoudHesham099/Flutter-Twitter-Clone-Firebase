@@ -70,6 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             itemCount: _allTweets.length,
             itemBuilder: (context, index) {
               return TweetContainer(
+                currentUserId: widget.currentUserId,
                 author: author,
                 tweet: _allTweets[index],
               );
@@ -82,6 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             itemCount: _mediaTweets.length,
             itemBuilder: (context, index) {
               return TweetContainer(
+                currentUserId: widget.currentUserId,
                 author: author,
                 tweet: _mediaTweets[index],
               );
