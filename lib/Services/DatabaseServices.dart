@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:twitter/Constants/Constants.dart';
+import 'package:twitter/Models/Activity.dart';
 import 'package:twitter/Models/Tweet.dart';
 import 'package:twitter/Models/UserModel.dart';
 
@@ -45,6 +46,8 @@ class DatabaseServices {
         .collection('Followers')
         .doc(currentUserId)
         .set({});
+
+    addActivity(currentUserId, null, true, visitedUserId);
   }
 
   static void unFollowUser(String currentUserId, String visitedUserId) {
@@ -149,6 +152,8 @@ class DatabaseServices {
     });
 
     likesRef.doc(tweet.id).collection('tweetLikes').doc(currentUserId).set({});
+
+    addActivity(currentUserId, tweet, false, null);
   }
 
   static void unlikeTweet(String currentUserId, Tweet tweet) {
@@ -184,5 +189,37 @@ class DatabaseServices {
         .get();
 
     return userDoc.exists;
+  }
+
+  static Future<List<Activity>> getActivities(String userId) async {
+    QuerySnapshot userActivitiesSnapshot = await activitiesRef
+        .doc(userId)
+        .collection('userActivities')
+        .orderBy('timestamp', descending: true)
+        .get();
+
+    List<Activity> activities = userActivitiesSnapshot.docs
+        .map((doc) => Activity.fromDoc(doc))
+        .toList();
+
+    return activities;
+  }
+
+  static void addActivity(
+      String currentUserId, Tweet tweet, bool follow, String followedUserId) {
+    if (follow) {
+      activitiesRef.doc(followedUserId).collection('userActivities').add({
+        'fromUserId': currentUserId,
+        'timestamp': Timestamp.fromDate(DateTime.now()),
+        "follow": true,
+      });
+    } else {
+      //like
+      activitiesRef.doc(tweet.authorId).collection('userActivities').add({
+        'fromUserId': currentUserId,
+        'timestamp': Timestamp.fromDate(DateTime.now()),
+        "follow": false,
+      });
+    }
   }
 }

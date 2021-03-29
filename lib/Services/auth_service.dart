@@ -39,4 +39,12 @@ class AuthService {
       return false;
     }
   }
+
+  static void logout() {
+    try {
+      _auth.signOut();
+    } catch (e) {
+      print(e);
+    }
+  }
 }

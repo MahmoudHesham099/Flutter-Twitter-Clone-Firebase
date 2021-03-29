@@ -4,7 +4,9 @@ import 'package:twitter/Constants/Constants.dart';
 import 'package:twitter/Models/Tweet.dart';
 import 'package:twitter/Models/UserModel.dart';
 import 'package:twitter/Screens/EditProfileScreen.dart';
+import 'package:twitter/Screens/WelcomeScreen.dart';
 import 'package:twitter/Services/DatabaseServices.dart';
+import 'package:twitter/Services/auth_service.dart';
 import 'package:twitter/Widgets/TweetContainer.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -225,7 +227,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     )
                                   ];
                                 },
-                                onSelected: (selectedItem) {},
+                                onSelected: (selectedItem) {
+                                  if (selectedItem == 'logout') {
+                                    AuthService.logout();
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                WelcomeScreen()));
+                                  }
+                                },
                               )
                             : SizedBox(),
                       ],
