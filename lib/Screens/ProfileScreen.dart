@@ -50,17 +50,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     ),
-    2: Padding(
-      padding: EdgeInsets.symmetric(vertical: 10),
-      child: Text(
-        'Likes',
-        style: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
-        ),
-      ),
-    ),
   };
 
   Widget buildProfileWidgets(UserModel author) {
@@ -90,9 +79,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 tweet: _mediaTweets[index],
               );
             });
-        break;
-      case 2:
-        return Center(child: Text('Likes', style: TextStyle(fontSize: 25)));
         break;
       default:
         return Center(
